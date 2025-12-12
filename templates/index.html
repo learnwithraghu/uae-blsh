@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAE Stock Tracker - DFM & ADX Investment Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇦🇪 UAE Stock Tracker</h1>
+            <p class="subtitle">Investment Scanner for Dubai & Abu Dhabi Markets</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('dfm')">Dubai Financial Market (DFM)</button>
+            <button class="tab-button" onclick="showTab('adx')">Abu Dhabi Securities Exchange (ADX)</button>
+        </div>
+
+        <!-- DFM Tab -->
+        <div id="dfm-tab" class="tab-content active">
+            <div class="controls">
+                <button class="refresh-button" onclick="refreshData('dfm')">
+                    🔄 Refresh DFM Data
+                </button>
+                <span id="dfm-last-update" class="last-update"></span>
+            </div>
+
+            <div id="dfm-loading" class="loading">
+                <div class="spinner"></div>
+                <p>Fetching DFM stock data...</p>
+            </div>
+
+            <div id="dfm-error" class="error-message" style="display: none;"></div>
+
+            <div id="dfm-content" style="display: none;">
+                <!-- Summary Section -->
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Capital</div>
+                        <div class="summary-value" id="dfm-total-capital">AED 0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Per Stock Allocation</div>
+                        <div class="summary-value" id="dfm-per-stock">AED 0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Stocks to Buy</div>
+                        <div class="summary-value highlight" id="dfm-stocks-to-buy">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Total Allocated</div>
+                        <div class="summary-value" id="dfm-allocated">AED 0</div>
+                    </div>
+                </div>
+
+                <!-- Buy Recommendations -->
+                <div id="dfm-recommendations-section">
+                    <h2 class="section-title">💡 Buy Recommendations</h2>
+                    <div id="dfm-recommendations"></div>
+                </div>
+
+                <!-- All Stocks Table -->
+                <div class="table-section">
+                    <h2 class="section-title">📊 All DFM Stocks Analysis</h2>
+                    <div class="table-container">
+                        <table id="dfm-stocks-table">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Company Name</th>
+                                    <th>Current Price</th>
+                                    <th>Previous Close</th>
+                                    <th>52W High</th>
+                                    <th>% from 52W High</th>
+                                    <th>% Change</th>
+                                    <th>Condition A</th>
+                                    <th>Condition B</th>
+                                    <th>Buy Signal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dfm-stocks-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADX Tab -->
+        <div id="adx-tab" class="tab-content">
+            <div class="controls">
+                <button class="refresh-button" onclick="refreshData('adx')">
+                    🔄 Refresh ADX Data
+                </button>
+                <span id="adx-last-update" class="last-update"></span>
+            </div>
+
+            <div id="adx-loading" class="loading">
+                <div class="spinner"></div>
+                <p>Fetching ADX stock data...</p>
+            </div>
+
+            <div id="adx-error" class="error-message" style="display: none;"></div>
+
+            <div id="adx-content" style="display: none;">
+                <!-- Summary Section -->
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Capital</div>
+                        <div class="summary-value" id="adx-total-capital">AED 0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Per Stock Allocation</div>
+                        <div class="summary-value" id="adx-per-stock">AED 0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Stocks to Buy</div>
+                        <div class="summary-value highlight" id="adx-stocks-to-buy">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Total Allocated</div>
+                        <div class="summary-value" id="adx-allocated">AED 0</div>
+                    </div>
+                </div>
+
+                <!-- Buy Recommendations -->
+                <div id="adx-recommendations-section">
+                    <h2 class="section-title">💡 Buy Recommendations</h2>
+                    <div id="adx-recommendations"></div>
+                </div>
+
+                <!-- All Stocks Table -->
+                <div class="table-section">
+                    <h2 class="section-title">📊 All ADX Stocks Analysis</h2>
+                    <div class="table-container">
+                        <table id="adx-stocks-table">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Company Name</th>
+                                    <th>Current Price</th>
+                                    <th>Previous Close</th>
+                                    <th>52W High</th>
+                                    <th>% from 52W High</th>
+                                    <th>% Change</th>
+                                    <th>Condition A</th>
+                                    <th>Condition B</th>
+                                    <th>Buy Signal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adx-stocks-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>⚠️ This is for informational purposes only. Not financial advice. Always do your own research.</p>
+            <p class="footer-note">Data source: investing.com | Strategy: Dip-Buy Trailing</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

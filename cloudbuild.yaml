@@ -1,0 +1,71 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/uae-stock-tracker:latest'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/uae-stock-tracker:$SHORT_SHA'
+      - '.'
+    id: 'build-image'
+
+  # Push the Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/uae-stock-tracker:latest'
+    id: 'push-image-latest'
+    waitFor: ['build-image']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/uae-stock-tracker:$SHORT_SHA'
+    id: 'push-image-sha'
+    waitFor: ['build-image']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'uae-stock-tracker'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/uae-stock-tracker:latest'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '10'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'GCS_BUCKET=${_GCS_BUCKET},GCP_PROJECT=$PROJECT_ID'
+    id: 'deploy-cloud-run'
+    waitFor: ['push-image-latest']
+
+# Images to be pushed to Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/uae-stock-tracker:latest'
+  - 'gcr.io/$PROJECT_ID/uae-stock-tracker:$SHORT_SHA'
+
+# Substitution variables (can be overridden when triggering the build)
+substitutions:
+  _REGION: 'me-west1'  # Middle East (Dubai) - Update this based on your config.yaml
+  _GCS_BUCKET: 'your-bucket-name'  # Update this based on your config.yaml
+
+# Build timeout
+timeout: 1200s
+
+# Options
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'N1_HIGHCPU_8'

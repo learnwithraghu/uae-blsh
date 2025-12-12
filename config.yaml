@@ -1,0 +1,39 @@
+# GCP Configuration
+gcp:
+  project_id: "data-engineer-423808"  # TODO: Replace with your GCP project ID
+  region: "asia-southeast1"
+  bucket_name: "uae-blsh"  # TODO: Replace with your GCS bucket name
+
+# Investment Strategy Configuration
+investment:
+  total_capital_aed: 50000
+  num_parts: 40  # Divides capital into 40 equal parts
+  allocation_per_stock_aed: 1250  # 50000 / 40
+  
+  # Buy decision thresholds
+  max_stocks_high_dip: 3  # Buy up to 3 stocks if top stock dropped > threshold
+  max_stocks_low_dip: 1   # Buy only 1 stock if top stock dropped <= threshold
+  dip_threshold_percent: -10.0  # Threshold to determine high vs low dip
+  
+# Exchange Rate
+exchange_rate:
+  usd_to_aed: 3.67
+
+# Data Refresh Settings
+data:
+  cache_duration_minutes: 5
+  request_timeout_seconds: 10
+  max_retries: 3
+
+# Stock Lists (Optional - if empty, fetches all available stocks)
+stocks:
+  dfm:
+    # Leave empty to fetch all DFM stocks, or specify symbols:
+    # - "DFM"
+    # - "EMAAR"
+    # - "DIB"
+  adx:
+    # Leave empty to fetch all ADX stocks, or specify symbols:
+    # - "ADCB"
+    # - "FAB"
+    # - "ALDAR"
